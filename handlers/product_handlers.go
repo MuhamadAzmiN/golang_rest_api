@@ -80,6 +80,7 @@ func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
     id, _ := strconv.ParseUint(mux.Vars(r)["id"], 10, 32)
     if err := h.productService.DeleteProduct(uint(id)); err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
+		
         return
     }
 

@@ -1,8 +1,10 @@
 package repo
 
 import (
-    "gorm.io/gorm"
-    "github.com/username/go_rest_api_crud/model"
+	"errors"
+
+	"github.com/username/go_rest_api_crud/model"
+	"gorm.io/gorm"
 )
 
 type ProductRepository struct {
@@ -13,9 +15,6 @@ func NewProductRepository(db *gorm.DB) *ProductRepository {
     return &ProductRepository{db: db}
 }
 
-/*************  ✨ Codeium Command ⭐  *************/
-// Create adds a new product to the database.
-/******  05242946-8c44-45c2-baac-e27114721d66  *******/
 func (r *ProductRepository) Create(product *models.Product) error {
     return r.db.Create(product).Error
 }
@@ -29,6 +28,11 @@ func (r *ProductRepository) FindAll() ([]models.Product, error) {
 func (r *ProductRepository) FindByID(id uint) (*models.Product, error) {
     var product models.Product
     err := r.db.First(&product, id).Error
+
+    if errors.Is(err, gorm.ErrRecordNotFound) {
+        return nil, errors.New("product not found")
+    }
+
     return &product, err
 }
 
